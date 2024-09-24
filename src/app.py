@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, send_file, jsonify, render_template, session
 from werkzeug.utils import secure_filename
 import logging
-import os
+import os, shutil
 import time
 import tarfile
 import uuid
@@ -24,10 +24,10 @@ def allowed_file(filename):  # 파일 확장자 확인 함수
 def remove_expired_files():
     ls = os.listdir(UPLOAD_FOLDER)
     for dir in ls:
-        if datetime.now() > datetime.strptime(time.ctime(os.path.getctime(dir)), "%a %b %d %H:%M:%S %Y") + timedelta(seconds=15):
-            os.remove(dir)
-
-
+        p = os.path.join(UPLOAD_FOLDER, dir)
+        if datetime.now() > datetime.strptime(time.ctime(os.path.getctime(p)), "%a %b %d %H:%M:%S %Y") + timedelta(seconds=15):
+            shutil.rmtree(p)
+    
 @app.before_request # 세션 시간마다 초기화
 def before_request():
     session.permanent = True
@@ -103,4 +103,4 @@ def list_files():
     return jsonify({'error': 'User folder not found'}), 404
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", port=8000)

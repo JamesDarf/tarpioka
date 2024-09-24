@@ -5,7 +5,7 @@ CVE-2007-4559
 ## path
 --------------------
 ```
-tarpioka/
+BubbleTea/
 ├── Dockerfile
 ├── flag
 ├── requirements.txt
